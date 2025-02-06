@@ -1,11 +1,12 @@
 package com.kikitalk.chatting.user;
 
-import com.kikitalk.chatting.user.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class UserService {
 
@@ -16,4 +17,14 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
         return user;
     }
+
+    User getUserByPhone(String phone) {
+        User user = userRepository.findByPhone(phone);
+        if (user == null) {
+            log.info("No user found with phone number: {}", phone);
+            return null;
+        }
+        return user;
+    }
+
 }

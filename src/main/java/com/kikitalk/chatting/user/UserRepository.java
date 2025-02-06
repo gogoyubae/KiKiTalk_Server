@@ -8,5 +8,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // JPA findBy 규칙
     public User findByKakaoAuthId(Long kakaoAuthId);
-    Optional<User> findById(Long id);
+    public Optional<User> findById(Long id);
+    public User findByPhone(String phone);
 }
