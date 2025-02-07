@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface RelationshipRepository extends JpaRepository<Relationship, Long> {
-    boolean existsByUserAndFriend(User user, User friend);
+    boolean existsByUserIdAndFriendId(Long userId, Long friendId);
 
     @Query("SELECT r.friend FROM Relationship r WHERE r.user.id = :userId")
     List<User> findFriendsByUserId(Long userId);
