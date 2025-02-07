@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface RelationshipRepository extends JpaRepository<Relationship, Long> {
     boolean existsByUserAndFriend(User user, User friend);
-    List<Relationship> findByUser(User user);
+    List<Relationship> findByUserId(Long userId);
 }

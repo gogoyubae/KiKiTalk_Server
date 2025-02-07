@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -23,5 +25,8 @@ public class RelationshipService {
             throw new RuntimeException("이미 친구로 등록된 사용자입니다.");
         }
         return relationshipRepository.save(new Relationship(user,friend));
+    }
+    public List<Relationship> getAllRelationships(Long userId) {
+        return relationshipRepository.findByUserId(userId);
     }
 }

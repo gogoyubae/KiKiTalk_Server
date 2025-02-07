@@ -7,10 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -18,10 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class RelationshipController {
 
+    // 친구 추가
     private final RelationshipService relationshipService;
     @PostMapping("/{id}")
     public ResponseEntity<Relationship> addRelationship(@AuthenticationPrincipal User user, @PathVariable("id") long friendId){
         Relationship relationship = relationshipService.addRelationship(user.getId(), friendId);
         return ResponseEntity.ok(relationship);
+    }
+    @GetMapping
+    public ResponseEntity<List<Relationship>> getRelationships(@AuthenticationPrincipal User user){
+        return ResponseEntity.ok(relationshipService.getAllRelationships(user.getId()));
     }
 }

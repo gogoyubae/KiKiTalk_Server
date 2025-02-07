@@ -39,7 +39,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         // JWT 발급
         JwtDto jwtDto = jwtProvider.generateToken(id.toString());
-        log.info("[KakaoOAuth2UserService] Jwt -> {}", jwtDto);
+        log.info("accessToken -> {}", jwtDto.getAccessToken());
         // JWT를 응답 헤더에 추가
         response.setHeader("Authorization", "Bearer " + jwtDto.getAccessToken());
         response.setHeader("Refresh-Token", jwtDto.getRefreshToken());
