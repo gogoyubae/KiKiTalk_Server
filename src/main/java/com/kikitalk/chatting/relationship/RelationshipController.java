@@ -25,7 +25,9 @@ public class RelationshipController {
         return ResponseEntity.ok(relationship);
     }
     @GetMapping
-    public ResponseEntity<List<Relationship>> getRelationships(@AuthenticationPrincipal User user){
-        return ResponseEntity.ok(relationshipService.getAllRelationships(user.getId()));
+    public ResponseEntity<List<User>> getAllFriends(@AuthenticationPrincipal User user){
+        log.info("Get relationships of user {}", user.getId());
+        List<User> friends = relationshipService.getAllFriends(user.getId());
+        return ResponseEntity.ok(friends);
     }
 }

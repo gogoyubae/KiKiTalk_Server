@@ -26,7 +26,7 @@ public class RelationshipService {
         }
         return relationshipRepository.save(new Relationship(user,friend));
     }
-    public List<Relationship> getAllRelationships(Long userId) {
-        return relationshipRepository.findByUserId(userId);
+    public List<User> getAllFriends(Long userId) {
+        return relationshipRepository.findFriendsByUserId(userId);
     }
 }
