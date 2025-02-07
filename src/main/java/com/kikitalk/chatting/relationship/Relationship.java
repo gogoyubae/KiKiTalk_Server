@@ -21,9 +21,14 @@ public class Relationship {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;  // 사용자 ID (FK)
+    private User user;  // 유저 ID (FK)
 
     @ManyToOne
     @JoinColumn(name = "friend_id", nullable = false)
     private User friend;  // 친구 ID (FK)
+
+    Relationship(User user, User friend) {
+        this.user = user;
+        this.friend = friend;
+    }
 }

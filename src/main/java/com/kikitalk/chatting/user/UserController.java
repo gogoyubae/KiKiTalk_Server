@@ -25,12 +25,12 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserByPhone(phone));
     }
 
-@GetMapping("/me")
-public ResponseEntity<?> getUserInfo(Authentication authentication) {
-    String id = authentication.getName(); // JWT에서 추출된 id
-    log.info("auto id -> {}", id);
-    Optional<User> user = userService.getUser(Long.parseLong(id));
-    return ResponseEntity.ok().body(user);
-}
+    @GetMapping("/me")
+    public ResponseEntity<?> getUserInfo(Authentication authentication) {
+        String id = authentication.getName(); // JWT에서 추출된 id
+        log.info("auto id -> {}", id);
+        Optional<User> user = userService.getUser(Long.parseLong(id));
+        return ResponseEntity.ok().body(user);
+    }
 }
 
