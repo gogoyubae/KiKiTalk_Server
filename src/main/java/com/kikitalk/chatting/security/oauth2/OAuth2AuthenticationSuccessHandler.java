@@ -6,6 +6,7 @@ import com.kikitalk.chatting.user.User;
 import com.kikitalk.chatting.user.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -26,17 +27,27 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                          Authentication authentication) throws IOException {
-        log.info("OAuth2 로그인 성공");
 
-        // OAuth2User에서 ID 추출
+        // 카카오 사용자 정보 가져오기
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = oAuth2User.getAttributes();
-        log.error("OAuth2User Attributes: {}", attributes);
-//        String kakaoAuthId = oAuth2User.getAttribute("id").toString();
-//        log.info(kakaoAuthId);
-        User user = userRepository.findByKakaoAuthId(oAuth2User.getAttribute("id"));
-        Long id = user.getId();
+        Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+        Map<String, Object> profile = (Map<String, Object>) kakaoAccount.get("profile");
+        Long kakaoAuthId = (Long) attributes.get("id");
+        String name = (String) profile.get("nickname");
+        String profileImage = (String) profile.get("profile_image_url");
 
+        User user = userRepository.findByKakaoAuthId(oAuth2User.getAttribute("id"));
+
+        if (user == null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("kakaoAuthId", kakaoAuthId);
+            session.setAttribute("name", name);
+            session.setAttribute("profileImage", profileImage);
+            log.info("[SuccessHandler] 신규 사용자, 회원가입 페이지로 이동");
+            response.sendRedirect("/signup");
+        } else {
+        Long id = user.getId();
         // JWT 발급
         JwtDto jwtDto = jwtProvider.generateToken(id.toString());
         log.info("accessToken -> {}", jwtDto.getAccessToken());
@@ -46,5 +57,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         // 리다이렉트 처리 (필요에 따라 설정)
         getRedirectStrategy().sendRedirect(request, response, "/home");
+        }
     }
 }

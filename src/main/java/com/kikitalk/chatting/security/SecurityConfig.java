@@ -2,8 +2,7 @@ package com.kikitalk.chatting.security;
 
 import com.kikitalk.chatting.security.jwt.JwtFilter;
 import com.kikitalk.chatting.security.oauth2.OAuth2AuthenticationSuccessHandler;
-import com.kikitalk.chatting.security.jwt.JwtFilter;
-import com.kikitalk.chatting.security.oauth2.KakaoOAuth2UserService;
+import com.kikitalk.chatting.security.oauth2.OAuth2Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final KakaoOAuth2UserService kakaoOAuth2UserService;
+    private final OAuth2Service OAuth2Service;
     private final OAuth2AuthenticationSuccessHandler successHandler;
     private final JwtFilter jwtFilter;
 
@@ -30,7 +29,7 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(kakaoOAuth2UserService) // OAuth2UserService 등록
+                                .userService(OAuth2Service) // OAuth2UserService 등록
                         )
                         .successHandler(successHandler)
                         .failureUrl("/login?error=true") // 실패 시 이동할 페이지
