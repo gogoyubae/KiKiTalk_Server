@@ -18,10 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class OAuth2Controller {
 
@@ -56,12 +57,11 @@ public class OAuth2Controller {
         JwtDto jwtDto = jwtProvider.generateToken(user.getId().toString());
         log.info("accessToken -> {}", jwtDto.getAccessToken());
         // JWT를 응답 헤더에 추가
-        response.setHeader("Authorization", "Bearer " + jwtDto.getAccessToken());
-        response.setHeader("Refresh-Token", jwtDto.getRefreshToken());
+        response.setHeader("accessToken", jwtDto.getAccessToken());
+        response.setHeader("refreshToken", jwtDto.getRefreshToken());
         // 세션 삭제 (더 이상 필요 없음)
         session.invalidate();
-        response.sendRedirect("/home");
 
-        return ResponseEntity.ok("회원가입 완료");
+        return ResponseEntity.ok().body(Map.of("success", true));
     }
 }

@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Map;
 
 @Component
@@ -45,15 +46,17 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             session.setAttribute("name", name);
             session.setAttribute("profileImage", profileImage);
             log.info("[SuccessHandler] 신규 사용자, 회원가입 페이지로 이동");
-            response.sendRedirect("/signup");
+            response.sendRedirect("http://localhost:5173/signup?kakaoAuthId=" + kakaoAuthId
+                    + "&name=" + URLEncoder.encode(name, "UTF-8")
+                    + "&profileImage=" + URLEncoder.encode(profileImage, "UTF-8"));
         } else {
         Long id = user.getId();
         // JWT 발급
         JwtDto jwtDto = jwtProvider.generateToken(id.toString());
         log.info("accessToken -> {}", jwtDto.getAccessToken());
         // JWT를 응답 헤더에 추가
-        response.setHeader("Authorization", "Bearer " + jwtDto.getAccessToken());
-        response.setHeader("Refresh-Token", jwtDto.getRefreshToken());
+        response.setHeader("accessToken" , jwtDto.getAccessToken());
+        response.setHeader("refreshToken", jwtDto.getRefreshToken());
 
         // 리다이렉트 처리 (필요에 따라 설정)
         getRedirectStrategy().sendRedirect(request, response, "/home");
