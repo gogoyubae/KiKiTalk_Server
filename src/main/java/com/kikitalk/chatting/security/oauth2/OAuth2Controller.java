@@ -31,8 +31,8 @@ public class OAuth2Controller {
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody UserDto userDto,
-                                    HttpServletRequest request, HttpServletResponse response,
-                                    HttpSession session) throws IOException {
+                                    HttpServletResponse response,
+                                    HttpSession session) {
         // 세션에서 카카오 정보 가져오기
         Long kakaoAuthId = (Long) session.getAttribute("kakaoAuthId");
         String name = (String) session.getAttribute("name");
