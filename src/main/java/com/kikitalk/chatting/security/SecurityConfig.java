@@ -36,7 +36,7 @@ public class SecurityConfig {
                                 .userService(OAuth2Service) // OAuth2UserService 등록
                         )
                         .successHandler(successHandler)
-                        .failureUrl("/login?error=true") // 실패 시 이동할 페이지
+                        .failureUrl("/login?error=true")
                 );
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

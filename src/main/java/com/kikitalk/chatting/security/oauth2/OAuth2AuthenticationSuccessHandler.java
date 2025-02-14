@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
 
@@ -41,10 +42,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         User user = userRepository.findByKakaoAuthId(oAuth2User.getAttribute("id"));
 
         if (user == null) {
-            HttpSession session = request.getSession();
-            session.setAttribute("kakaoAuthId", kakaoAuthId);
-            session.setAttribute("name", name);
-            session.setAttribute("profileImage", profileImage);
             log.info("[SuccessHandler] 신규 사용자, 회원가입 페이지로 이동");
             response.sendRedirect("http://localhost:5173/signup?kakaoAuthId=" + kakaoAuthId
                     + "&name=" + URLEncoder.encode(name, "UTF-8")
@@ -54,12 +51,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         // JWT 발급
         JwtDto jwtDto = jwtProvider.generateToken(id.toString());
         log.info("accessToken -> {}", jwtDto.getAccessToken());
-        // JWT를 응답 헤더에 추가
-        response.setHeader("accessToken" , jwtDto.getAccessToken());
-        response.setHeader("refreshToken", jwtDto.getRefreshToken());
 
-        // 리다이렉트 처리 (필요에 따라 설정)
-        getRedirectStrategy().sendRedirect(request, response, "/home");
+            // 리다이렉트 처리
+            response.sendRedirect("http://localhost:5173/home?accessToken=" + jwtDto.getAccessToken());
+            log.info("response -> {}", response);
         }
     }
 }
