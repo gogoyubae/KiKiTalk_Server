@@ -42,6 +42,10 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         User user = userRepository.findByKakaoAuthId(oAuth2User.getAttribute("id"));
 
         if (user == null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("kakaoAuthId", kakaoAuthId);
+            session.setAttribute("name", name);
+            session.setAttribute("profileImage", profileImage);
             log.info("[SuccessHandler] 신규 사용자, 회원가입 페이지로 이동");
             response.sendRedirect("http://localhost:5173/signup?kakaoAuthId=" + kakaoAuthId
                     + "&name=" + URLEncoder.encode(name, "UTF-8")
