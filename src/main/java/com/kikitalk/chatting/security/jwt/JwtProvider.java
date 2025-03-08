@@ -26,7 +26,7 @@ public class JwtProvider {
         try {
             log.debug("Generating access token...");
             String accessToken = Jwts.builder()
-                    .setSubject(subject) // subject - 여기서 kakaoAuthId.toString
+                    .setSubject(subject) // subject - 로컬db에서 auto increment로 부여한 id 사용
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(new Date().getTime() + ACCESSTOKEN_VALID_MILISECOND))
                     .signWith(privateKey, SignatureAlgorithm.ES256)

@@ -38,5 +38,15 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
     }
+    // 유저 이름 찾기
+    @GetMapping("/username/{id}")
+    public ResponseEntity<?> getUsername(@PathVariable("id") Long id) {
+        Optional<User> user = userService.getUser(id);
+        if (user.isPresent()) {
+            return ResponseEntity.ok(user.get().getName());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }
 }
 

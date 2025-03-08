@@ -18,6 +18,11 @@ public class UserService {
         return user;
     }
 
+    String getUsername(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        return user.getName();
+    }
+
     User getUserByPhone(String phone) {
         User user = userRepository.findByPhone(phone);
         if (user == null) {
