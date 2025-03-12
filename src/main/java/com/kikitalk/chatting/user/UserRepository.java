@@ -9,5 +9,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // JPA findBy 규칙
     public User findByKakaoAuthId(Long kakaoAuthId);
     public Optional<User> findById(Long id);
-    public User findByPhone(String phone);
+    public Optional<User> findByPhone(String phone);
 }

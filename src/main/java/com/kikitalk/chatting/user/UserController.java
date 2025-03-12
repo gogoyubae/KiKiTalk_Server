@@ -26,8 +26,11 @@ public class UserController {
 
     // 전화번호로 전체 유저 검색
     @GetMapping("/search")
-    public ResponseEntity<User> searchFriend(@AuthenticationPrincipal User user, String phone) {
-        return ResponseEntity.ok(userService.getUserByPhone(phone));
+    public ResponseEntity<User> searchFriend(@RequestParam String phone) {
+      Optional<User> user = userService.getUserByPhone(phone);
+      log.info("Phone ->{}", phone);
+      log.info("user->{}", user);
+      return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/profile")

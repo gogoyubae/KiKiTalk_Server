@@ -29,4 +29,7 @@ public class RelationshipService {
     public List<User> getAllFriends(Long userId) {
         return relationshipRepository.findFriendsByUserId(userId);
     }
+    public boolean isFriend(Long userId, Long friendId) {
+        return relationshipRepository.existsByUserIdAndFriendId(userId, friendId);
+    }
 }

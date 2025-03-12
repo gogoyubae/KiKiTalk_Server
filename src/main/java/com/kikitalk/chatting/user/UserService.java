@@ -23,8 +23,8 @@ public class UserService {
         return user.getName();
     }
 
-    User getUserByPhone(String phone) {
-        User user = userRepository.findByPhone(phone);
+    Optional<User> getUserByPhone(String phone) {
+        Optional<User> user = userRepository.findByPhone(phone);
         if (user == null) {
             log.info("No user found with phone number: {}", phone);
             return null;
