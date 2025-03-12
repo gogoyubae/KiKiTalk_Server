@@ -41,15 +41,11 @@ public class UserController {
         Optional<User> user = userService.getUser(id);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-    // 유저 이름 찾기
-    @GetMapping("/username/{id}")
-    public ResponseEntity<?> getUsername(@PathVariable("id") Long id) {
-        Optional<User> user = userService.getUser(id);
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user.get().getName());
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
-        }
+    @GetMapping("/profile/{id}")
+    public ResponseEntity<?> getFriendProfile(@RequestHeader("Authorization") String token, @PathVariable Long friendId) {
+        Optional<User> user = userService.getUser(friendId);
+        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
 }
 
